@@ -1,25 +1,25 @@
-import { createApiUrl } from "@/utils/api";
+"use client";
+
+import {
+  POKEMON_PER_PAGE,
+  PokemonItem,
+  getPokemonList,
+} from "@/utils/pokemon-api";
 import { useEffect, useState } from "react";
-import { useGetFetch } from "./useGetFetch";
-
-const ITEMS_PER_PAGE = 50;
-
-export type PokemonItem = {
-  name: string;
-  url: string;
-};
+import { useEffectGetFetch } from "./useEffectGetFetch";
 
 export function useGetPokemons(initialPage = 0) {
   const [page, setPage] = useState(initialPage);
-  const url = createApiUrl({ offset: page, limit: ITEMS_PER_PAGE });
-  const { data: pokemons, fetchData } = useGetFetch<PokemonItem[]>(
-    url,
-    (response) => response.results
+  const { data: pokemons, fetchData } = useEffectGetFetch<PokemonItem[]>(
+    getPokemonList({ offset: page, limit: POKEMON_PER_PAGE })
   );
 
   useEffect(() => {
     fetchData(
-      createApiUrl({ offset: page * ITEMS_PER_PAGE, limit: ITEMS_PER_PAGE })
+      getPokemonList({
+        offset: page * POKEMON_PER_PAGE,
+        limit: POKEMON_PER_PAGE,
+      })
     );
   }, [page]);
 
